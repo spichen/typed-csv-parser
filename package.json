@@ -1,6 +1,6 @@
 {
   "name": "typed-csv-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "A strongly-typed CSV stream processor for Node.js that transforms CSV data into TypeScript classes with automatic type conversion and validation.",
   "main": "dist/index.js",
