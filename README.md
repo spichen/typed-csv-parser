@@ -170,6 +170,18 @@ John Doe,30,true,2023-01-01
 Jane Smith,25,false,2023-02-15
 ```
 
+## Publishing
+
+This package is published to npm using GitHub Actions. New versions are automatically published when a new GitHub release is created. To publish a new version:
+
+1. Update the version in `package.json`
+2. Create and push your changes
+3. Create a new release on GitHub
+4. The GitHub Action will automatically:
+   - Run tests
+   - Build the package
+   - Publish to npm
+
 ## License
 
 MIT
