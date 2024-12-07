@@ -16,14 +16,15 @@
       "*": ["node_modules/*"]
     },
     "sourceMap": true,
-    "rootDir": "./",
+    "rootDir": "./src",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
   },
-  "include": ["src/**/*", "jest.config.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "src/__tests__"]
 }

@@ -1,41 +1,45 @@
 import 'reflect-metadata';
 
 import { Transform } from 'stream';
-import { CSV_HEADER, CSV_PARSER } from './csv-decorator.ts';
+import { CSV_HEADER, CSV_PARSER, CSV_FIELDS } from './csv-decorator.ts';
 
 const recordToEntityMap = <T extends new () => any>(
   record: Record<string, string>,
   type: T
-): InstanceType<T> => {
-  const instance = new type();
-  const properties = Object.keys(instance);
+): InstanceType<T> | undefined => {
+  try {
+    const instance = new type();
+    const properties = Reflect.getMetadata(CSV_FIELDS, type.prototype);
 
-  for (const property of properties) {
-    const csvHeader = Reflect.getMetadata(CSV_HEADER, type.prototype, property);
-    if (csvHeader && record[csvHeader] !== undefined) {
-      const value = record[csvHeader];
+    for (const property of properties) {
+      const csvHeader = Reflect.getMetadata(CSV_HEADER, type.prototype, property);
+      if (csvHeader && record[csvHeader] !== undefined) {
+        const value = record[csvHeader];
 
-      const customParser = Reflect.getMetadata(CSV_PARSER, type.prototype, property);
-      if (customParser) {
-        instance[property] = customParser(value);
-        continue;
-      }
+        const customParser = Reflect.getMetadata(CSV_PARSER, type.prototype, property);
+        if (customParser) {
+          instance[property] = customParser(value);
+          continue;
+        }
 
-      const propertyType = Reflect.getMetadata('design:type', type.prototype, property);
+        const propertyType = Reflect.getMetadata('design:type', type.prototype, property);
 
-      if (propertyType === Number) {
-        instance[property] = Number(value);
-      } else if (propertyType === Boolean) {
-        instance[property] = value.toLowerCase() === 'true';
-      } else if (propertyType === Date) {
-        instance[property] = new Date(value);
-      } else {
-        instance[property] = value;
+        if (propertyType === Number) {
+          instance[property] = Number(value);
+        } else if (propertyType === Boolean) {
+          instance[property] = value.toLowerCase() === 'true';
+        } else if (propertyType === Date) {
+          instance[property] = new Date(value);
+        } else {
+          instance[property] = value;
+        }
       }
     }
-  }
 
-  return instance;
+    return instance;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 interface CsvTransformerOptions<T extends new () => any> {
@@ -53,7 +57,6 @@ export const createCsvTransformer = <T extends new () => any>({
     transform(record, encoding, callback) {
       try {
         const transformedRecord = recordToEntityMap(record, type);
-
         if (transformedRecord) {
           batch.push(transformedRecord);
 

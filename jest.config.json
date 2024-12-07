@@ -1,16 +1,13 @@
 {
+  "preset": "ts-jest/presets/default-esm",
   "testEnvironment": "node",
   "extensionsToTreatAsEsm": [".ts"],
-  "moduleNameMapper": {
-    "^(\\.{1,2}/.*)\\.ts$": "$1"
-  },
-  "transform": {
-    "^.+\\.(ts|js)$": "babel-jest"
-  },
   "moduleFileExtensions": ["ts", "js", "json", "node"],
   "testMatch": ["**/*.spec.ts"],
   "testPathIgnorePatterns": ["/node_modules/", "/dist/"],
   "rootDir": ".",
   "testTimeout": 10000,
-  "setupFiles": ["./jest.setup.ts"]
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  }
 }
